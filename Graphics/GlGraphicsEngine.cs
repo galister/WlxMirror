@@ -79,12 +79,6 @@ public sealed class GlGraphicsEngine
         Render?.Invoke(this, _renderContext);
     }
 
-    public GlTexture TextureFromFile(string path, GraphicsFormat internalFormat = GraphicsFormat.RGBA8)
-    {
-        var internalFmt = GraphicsFormatAsInternal(internalFormat);
-        return new GlTexture(_gl, path, internalFmt);
-    }
-
     public GlTexture EmptyTexture(uint width, uint height, GraphicsFormat internalFormat = GraphicsFormat.RGBA8, bool dynamic = false)
     {
         var internalFmt = GraphicsFormatAsInternal(internalFormat);

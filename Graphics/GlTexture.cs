@@ -16,38 +16,6 @@ public class GlTexture
 
     private readonly bool _dynamic;
 
-    public unsafe GlTexture(GL gl, string path, InternalFormat internalFormat = InternalFormat.Rgba8)
-    {
-        _gl = gl;
-        _internalFormat = internalFormat;
-        Handle = _gl.GenTexture();
-        _gl.GetError().AssertNone();
-
-        Bind();
-
-        using (var img = Image.Load<Rgba32>(path))
-        {
-            Allocate(internalFormat, (uint)img.Width, (uint)img.Height, PixelFormat.Rgba, PixelType.UnsignedByte,
-                null);
-
-            img.ProcessPixelRows(accessor =>
-            {
-                var maxY = accessor.Height - 1;
-                for (int y = 0; y < accessor.Height; y++)
-                {
-                    fixed (void* data = accessor.GetRowSpan(y))
-                    {
-                        gl.TexSubImage2D(TextureTarget.Texture2D, 0, 0, maxY - y, (uint)accessor.Width, 1,
-                            PixelFormat.Rgba, PixelType.UnsignedByte, data);
-                        _gl.GetError().AssertNone();
-                    }
-                }
-            });
-        }
-
-        SetParameters();
-    }
-
     public unsafe GlTexture(GL gl, uint width, uint height, InternalFormat internalFormat = InternalFormat.Rgba8,
         bool dynamic = false)
     {
