@@ -4,7 +4,7 @@ using WlxMirror.Wayland.Protocols;
 
 namespace WlxMirror.Wayland.Capture;
 
-public sealed class WlrCapture<T> : IDisposable where T : IWaylandFrame
+public sealed class WlrCapture<T> : ICapture, IDisposable where T : IWaylandFrame
 {
     private readonly WlDisplay Display;
     private readonly WaylandOutput Screen;

@@ -25,6 +25,7 @@ Capture your real desktop and make it visible as an interactive window inside Xr
 
 # Works Used
 - [Godot Engine](https://github.com/godotengine/godot), MIT License
+- [Nito.AsyncEx](https://github.com/StephenCleary/AsyncEx), MIT License
 - [OBS Studio](https://github.com/obsproject/obs-studio), GPLv2 License
 - [Silk.NET](https://github.com/dotnet/Silk.NET), MIT License
 - [Tmds.DBus](https://github.com/tmds/Tmds.DBus), MIT License

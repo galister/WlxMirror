@@ -9,6 +9,7 @@ public class DesktopClient : IDisposable
     private ZxdgOutputManagerV1? _outputManager;
     private WlSeat? _seat;
     
+    public bool IsWlr { get; private set; }
     
     public DesktopClient(string wlDisplay)
     {
@@ -24,6 +25,8 @@ public class DesktopClient : IDisposable
                 _seat = reg.Bind<WlSeat>(e.Name, e.Interface, e.Version);
             else if (e.Interface == WlInterface.ZxdgOutputManagerV1.Name)
                 _outputManager = reg.Bind<ZxdgOutputManagerV1>(e.Name, e.Interface, e.Version);
+            else if (e.Interface == WlInterface.ZwlrExportDmabufManagerV1.Name)
+                IsWlr = true;
         };
 
         reg.GlobalRemove += (_, e) =>

@@ -3,21 +3,26 @@
 using WlxMirror.Graphics;
 using WlxMirror.Wayland;
 using System.CommandLine;
+using Nito.AsyncEx.Synchronous;
 using Silk.NET.Input;
 using WlxMirror.Input;
 using WlxMirror.Numerics;
 using WlxMirror.Wayland.Capture;
 using WlxMirror.Wayland.Capture.Frame;
+using WlxMirror.Wayland.Capture.PipeWire;
 
 var outputOpt = new Option<string>("--output", "Output name to mirror, ex: DP-2");
 var desktopOpt = new Option<string>("--desktop", "WAYLAND_DISPLAY of desktop");
 var mirrorOpt = new Option<string>("--mirror", "WAYLAND_DISPLAY of mirror");
 var mouseOpt = new Option<bool>("--mouse", "Enable mouse passthrough");
+var colorSwapOpt = new Option<bool>("--colorswap", "Swap red and blue channels (software capture only)");
 
 var rootCommand = new RootCommand();
 rootCommand.AddOption(desktopOpt);
 rootCommand.AddOption(mirrorOpt);
 rootCommand.AddOption(outputOpt);
+rootCommand.AddOption(mouseOpt);
+rootCommand.AddOption(colorSwapOpt);
 
 rootCommand.SetHandler((ctx) =>
 {
@@ -36,8 +41,24 @@ rootCommand.SetHandler((ctx) =>
     var desktopClient = new DesktopClient(desktopSocket);
     var output = ctx.ParseResult.GetValueForOption(outputOpt);
     var waylandOutput = desktopClient.GetOutput(output);
+
+    ICapture capture;
+    if (desktopClient.IsWlr)
+        capture = new WlrCapture<DmaBufFrame>(desktopSocket, waylandOutput);
+    else
+    {
+        var nodeId = XdgScreenCastHandler.PromptUserAsync(waylandOutput).WaitAndUnwrapException();
+
+        if (!nodeId.HasValue)
+        {
+            Console.WriteLine("No capture source available.");
+            Environment.Exit(1);
+        }
+        capture = new PipeWireCapture(waylandOutput, nodeId.Value, ctx.ParseResult.GetValueForOption(colorSwapOpt));
+    }
     
-    var capture = new WlrCapture<DmaBufFrame>(desktopSocket, waylandOutput);
+    Console.WriteLine($"Capturing output: {waylandOutput.Name}");
+    
     var mouseProvider = ctx.ParseResult.GetValueForOption(mouseOpt) ? (IMouseProvider)new UInput() : new DummyMouse();
     
     Environment.SetEnvironmentVariable("WAYLAND_DISPLAY", mirrorSocket);
