@@ -23,6 +23,21 @@ Capture your real desktop and make it visible as an interactive window inside Xr
 ./WlxMirror --output DP-2
 ```
 
+# Build & Run
+
+On any wlroots-based compositor:
+
+```bash 
+dotnet run
+```
+
+On Gnome, KDE or any other Wayland compositor:
+
+```bash
+./prebuild.sh
+dotnet run
+```
+
 # Works Used
 - [Godot Engine](https://github.com/godotengine/godot), MIT License
 - [Nito.AsyncEx](https://github.com/StephenCleary/AsyncEx), MIT License
