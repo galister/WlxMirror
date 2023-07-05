@@ -5,6 +5,8 @@ This is a simple tool that does the following:
 - Create a window and display the captured image
 - Optional: Relay mouse clicks from the window to the captured screen
 
+This project is a spin-off of [WlxOverlay](https://github.com/galister/WlxOverlay).
+
 # Example use cases
 
 ### Use between 2 wayland servers
