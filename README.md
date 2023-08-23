@@ -14,7 +14,7 @@ This project is a spin-off of [WlxOverlay](https://github.com/galister/WlxOverla
 Capture your real desktop and make it visible as an interactive window inside XrDesktop or StardustXR!
 
 ```bash
-./WlxMirror --desktop wayland-0 --mirror wayland-1 --output DP-2 --mouse
+WAYLAND_DISPLAY=wayland-1 ./WlxMirror --desktop wayland-0 --mirror wayland-1 --output DP-2 --mouse
 ```
 
 ### View a virtual or powered-off screen
